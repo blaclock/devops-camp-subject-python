@@ -23,6 +23,11 @@ def health_check():
 
 
 if __name__ == "__main__":
+
+    import os
+
+    reload = os.getenv("UVICORN_RELOAD", "1").lower() in ("1", "true", "yes")
+
     import uvicorn
 
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=reload)

@@ -37,7 +37,7 @@ class ReservationCreate(SQLModel):
 
 
 class ReservationUpdate(SQLModel):
-    name: Optional[str] = Field(max_length=255)
-    email: Optional[str] = Field(max_length=255)
-    date: Optional[datetime] = Field(nullable=False)
-    message: Optional[str] = Field(max_length=255)
+    name: str = Field(max_length=255, nullable=True)
+    email: str = Field(max_length=255, nullable=True)
+    date: datetime = Field(nullable=True)
+    message: str = Field(max_length=255, nullable=True)
