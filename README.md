@@ -17,9 +17,9 @@ PYTHONPATH=src python3 -m db.setup_db
 
 ### API動作確認
 ```
-curl -X POST 'http://localhost:8000/reservations/' \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"鈴木一郎","email":"test_mail@test.com","date":"2025-01-01T10:00:00","message":"テスト予約です"}'
+curl -X POST "http://localhost:8000/reservations/" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"鈴木二郎","email":"test2_mail@test.com","date":"2026-01-01T10:00:00","status":"pending","message":"テスト予約2です"}'
 ```
 
 ### 静的解析
@@ -40,6 +40,13 @@ python3 -m mypy src/
 ````
 
 ### 自動テスト
+
+#### 単体テスト
 ````
-python3 -m pytest tests/ -v --html=report.html
+python3 -m pytest tests/unit/ -v --html=report.html
+````
+
+#### 結合テスト
+````
+python3 -m pytest tests/integration/ -v --html=report.html
 ````

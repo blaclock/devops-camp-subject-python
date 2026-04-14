@@ -28,6 +28,7 @@ def create_reservation(reservation: ReservationCreate, session: Session = Depend
         name=reservation.name,
         email=reservation.email,
         date=reservation.date,
+        status=reservation.status,
         message=reservation.message,
     )
     session.add(db_reservation)
@@ -51,6 +52,8 @@ def update_reservation(
         db_reservation.email = reservation.email
     if reservation.date:
         db_reservation.date = reservation.date
+    if reservation.status:
+        db_reservation.status = reservation.status
     if reservation.message:
         db_reservation.message = reservation.message
     db_reservation.updated_at = datetime.now()

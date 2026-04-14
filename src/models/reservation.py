@@ -13,6 +13,7 @@ class Reservation(SQLModel, table=True):
     name: str  # 予約者名
     email: str  # メールアドレス
     date: datetime  # 予約日時
+    status: str = Field(default="pending")  # ステータス（pending / confirmed / cancelled など）
     message: str = Field(sa_column=Column(Text))  # メッセージ
     # レコード作成日時（データベース側で自動設定）
     created_at: Optional[datetime] = Field(
@@ -33,6 +34,7 @@ class ReservationCreate(SQLModel):
     name: str = Field(max_length=255)
     email: str = Field(max_length=255)
     date: datetime = Field(nullable=False)
+    status: str = Field(default="pending", max_length=50)
     message: str = Field(max_length=255)
 
 
@@ -40,4 +42,5 @@ class ReservationUpdate(SQLModel):
     name: str = Field(max_length=255, nullable=True)
     email: str = Field(max_length=255, nullable=True)
     date: datetime = Field(nullable=True)
+    status: str = Field(max_length=50, nullable=True)
     message: str = Field(max_length=255, nullable=True)
