@@ -8,7 +8,7 @@ from db.database import get_session
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("/", status_code=status.HTTP_200_OK)
 def get_reservations(session: Session = Depends(get_session)):
     reservations = session.exec(select(Reservation)).all()
     return reservations
