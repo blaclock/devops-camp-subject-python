@@ -16,6 +16,7 @@ def test_get_reservation_unit():
         name="test",
         email="test@example.com",
         date="2027-01-01 10:00:00",
+        status="pending",
         message="test message",
     )
 
@@ -27,6 +28,7 @@ def test_get_reservation_unit():
     assert result.name == "test"
     assert result.email == "test@example.com"
     assert result.date == "2027-01-01 10:00:00"
+    assert result.status == "pending"
     assert result.message == "test message"
 
     mock_session.get.assert_called_once_with(Reservation, 1)
@@ -51,6 +53,7 @@ def test_create_reservation():
         name="test",
         email="test@example.com",
         date=datetime(2026, 1, 1, 10, 0),
+        status="pending",
         message="test message",
     )
     mock_session.commit.return_value = None
@@ -59,7 +62,11 @@ def test_create_reservation():
     # Act
     result = create_reservation(
         reservation=ReservationCreate(
-            name="test", email="test@example.com", date=datetime(2026, 1, 1, 10, 0), message="test message"
+            name="test",
+            email="test@example.com",
+            date=datetime(2026, 1, 1, 10, 0),
+            status="pending",
+            message="test message",
         ),
         session=mock_session,
     )
@@ -68,9 +75,16 @@ def test_create_reservation():
     assert result.name == "test"
     assert result.email == "test@example.com"
     assert result.date == datetime(2026, 1, 1, 10, 0)
+    assert result.status == "pending"
     assert result.message == "test message"
     mock_session.add.assert_called_once_with(
-        Reservation(name="test", email="test@example.com", date=datetime(2026, 1, 1, 10, 0), message="test message")
+        Reservation(
+            name="test",
+            email="test@example.com",
+            date=datetime(2026, 1, 1, 10, 0),
+            status="pending",
+            message="test message",
+        )
     )
     mock_session.commit.assert_called_once()
     mock_session.refresh.assert_called_once()
@@ -83,6 +97,7 @@ def test_update_reservation():
         name="test2",
         email="test2@example.com",
         date=datetime(2026, 1, 1, 10, 0),
+        status="pending",
         message="test message",
     )
     mock_session.commit.return_value = None
@@ -92,7 +107,11 @@ def test_update_reservation():
     result = update_reservation(
         reservation_id=1,
         reservation=ReservationUpdate(
-            name="test2", email="test2@example.com", date=datetime(2026, 1, 1, 10, 0), message="test message"
+            name="test2",
+            email="test2@example.com",
+            date=datetime(2026, 1, 1, 10, 0),
+            status="confirmed",
+            message="test message",
         ),
         session=mock_session,
     )
@@ -101,6 +120,7 @@ def test_update_reservation():
     assert result.name == "test2"
     assert result.email == "test2@example.com"
     assert result.date == datetime(2026, 1, 1, 10, 0)
+    assert result.status == "confirmed"
     assert result.message == "test message"
     mock_session.get.assert_called_once_with(Reservation, 1)
     mock_session.commit.assert_called_once()
@@ -115,6 +135,7 @@ def test_delete_reservation():
         name="test",
         email="test@example.com",
         date="2027-01-01 10:00:00",
+        status="pending",
         message="test message",
     )
     mock_session.commit.return_value = None

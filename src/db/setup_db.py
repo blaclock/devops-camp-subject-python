@@ -3,7 +3,7 @@
 
 from sqlalchemy import text
 
-from src.db.database import create_db_and_tables, engine
+from database import create_db_and_tables, engine
 
 
 # データベースに接続し、reservationsテーブルが存在するか確認する
