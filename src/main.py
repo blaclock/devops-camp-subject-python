@@ -1,9 +1,9 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
-from db.database import create_db_and_tables
+from src.db.database import create_db_and_tables
 
-from api.routes.reservations import router as reservation_router
+from src.api.routes.reservations import router as reservation_router
 
 
 @asynccontextmanager
