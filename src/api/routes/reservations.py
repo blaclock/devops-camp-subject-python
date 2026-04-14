@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from sqlmodel import Session, select
 from datetime import datetime
 
-from src.models.reservation import Reservation, ReservationCreate, ReservationUpdate
-from src.db.database import get_session
+from models.reservation import Reservation, ReservationCreate, ReservationUpdate
+from db.database import get_session
 
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("/", status_code=status.HTTP_200_OK)
 def get_reservations(session: Session = Depends(get_session)):
     reservations = session.exec(select(Reservation)).all()
     return reservations

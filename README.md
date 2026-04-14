@@ -21,3 +21,25 @@ curl -X POST 'http://localhost:8000/reservations/' \
   -H 'Content-Type: application/json' \
   -d '{"name":"鈴木一郎","email":"test_mail@test.com","date":"2025-01-01T10:00:00","message":"テスト予約です"}'
 ```
+
+### 静的解析
+
+#### Flakeの実行
+````
+python3 -m flake8 src/
+````
+
+#### Blackの実行
+````
+python3 -m black src/
+````
+
+#### mypyの実行
+````
+python3 -m mypy src/
+````
+
+### 自動テスト
+````
+python3 -m pytest tests/ -v --html=report.html
+````
