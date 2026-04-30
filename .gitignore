@@ -1,5 +1,5 @@
 memo/
 .env
 __pycache__/
-report.html
-assets/style.css
+LearningDocks/
+decorator-and-di.md

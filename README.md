@@ -1,52 +1,52 @@
-### パッケージインストール
+### AWS構成図
+
+![AWS構成図](aws_architecture.png)
+
+---
+
+### Dockerfile/.dockerignore設計
+予約管理システムのAPI
+- マルチステージビルド
+  - venvによる依存関係の隔離
+    - 依存関係をvenv内に隔離することで、runtimeへ/opt/venvをコピーするだけで実行環境が構築できるようにする
+    - COPY --from=builderで、どこをビルドステージからコピーすれば良いか明確になる
+- USERの非ルート化
+  - RCE(Remote Code Excution)の脆弱性がある際に、アプリケーション層(コンテナ環境)とホスト環境(コンテナを起動しているPC)での被害を限定する
+  - EXPOSEでポート番号を1024未満を指定しない
+    - 0から1023はLinuxの特権ポートなので、仮に80や443を使用すると権限エラーとなる
+- PYTHONPATHの設定
+  - Pythonのモージュール探索パスを設定
+- .dockerignoreについて
+  - Dockerfileは実行環境で不要
+  - 開発環境の__pycache__は不要
+
+---
+
+### コンテナ起動方法
+イメージビルド
 ```
-pip3 install fastapi uvicorn sqlmodel pymysql python-dotenv
+cd src
+docker build -t subject .
 ```
 
-
-### データベースの作成
+ボリュームの作成
 ```
-mysql -u root -p -e "CREATE DATABASE python_subject;"
-```
-
-### テーブルの作成
-ルートディレクトリで下記のコマンドを実行
-```
-PYTHONPATH=src python3 -m db.setup_db
+docker volume create db-data
 ```
 
-### API動作確認
+ネットワークの作成
 ```
-curl -X POST "http://localhost:8000/reservations/" \
-  -H "Content-Type: application/json" \
-  -d '{"name":"鈴木二郎","email":"test2_mail@test.com","date":"2026-01-01T10:00:00","status":"pending","message":"テスト予約2です"}'
+docker network create subject-net
 ```
 
-### 静的解析
+dbコンテナ起動
+```
+docker run -d --name db --network subject-net   -v db-data:/var/lib/mysql   -e MYSQL_ROOT_PASSWORD=rootpass   -e MYSQL_DATABASE=python_subject -p 3306:3306  mysql:latest
+```
 
-#### Flakeの実行
-````
-python3 -m flake8 src/
-````
+apiコンテ起動
+```
+docker run -d -p 8000:8000 --name subject --network subject-net     -e DB_HOST=db   -e DB_USER=root   -e DB_PASSWORD=rootpass   -e DB_NAME=python_subject   subject
+```
 
-#### Blackの実行
-````
-python3 -m black src/
-````
-
-#### mypyの実行
-````
-python3 -m mypy src/
-````
-
-### 自動テスト
-
-#### 単体テスト
-````
-python3 -m pytest tests/unit/ -v --html=report.html
-````
-
-#### 結合テスト
-````
-python3 -m pytest tests/integration/ -v --html=report.html
-````
+---
